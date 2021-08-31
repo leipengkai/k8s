@@ -13,22 +13,30 @@ data:
               enable_auto_commit => true
               auto_commit_interval_ms => "1000"
               bootstrap_servers => "kafka:9092"
-              topics => ["test-filebeat"]
+              #topics => ["test-filebeat"]
+              topics => ["filebeat-sidecar"]
+              type => ["filebeat-sidecar"]
               codec => json
           }
     }
 
     output {
        stdout{ codec=>rubydebug}
-       if [fields][pod_namespace] =~ "logging" {
+       #if [fields][pod_namespace] =~ "logging" {
+           #elasticsearch {
+             #hosts => ["elasticsearch-logging:9200"]
+             ##hosts => ["elasticsearch-logging-0.elasticsearch-logging:9200"]
+             #index => "%{[fields][pod_namespace]}-s-%{+YYYY.MM.dd}"
+          #}
+       if [type] == "filebeat-sidecar" {
            elasticsearch {
              hosts => ["elasticsearch-logging:9200"]
-             index => "%{[fields][pod_namespace]}-s-%{+YYYY.MM.dd}"
+             index => "filebeat-%{+YYYY.MM.dd}"
           }
        } else {
           elasticsearch {
              hosts => ["elasticsearch-logging:9200"]
-             index => "no-index-%{+YYYY.MM.dd}"
+             index => "other-index-%{+YYYY.MM.dd}"
           }
        }
     }

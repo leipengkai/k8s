@@ -1,0 +1,296 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  annotations:
+    checksum/config: 72693132dda8a6cc155fe28aa6172e5a9b79c0ff496ff93b86cc7424e3cb8165
+    prometheus.io/port: http-metrics
+    prometheus.io/scrape: "true"
+  creationTimestamp: "2021-08-31T02:03:32Z"
+  generateName: loki-
+  labels:
+    app: loki
+    controller-revision-hash: loki-7bdbf7f5fd
+    name: loki
+    release: loki
+    statefulset.kubernetes.io/pod-name: loki-0
+  managedFields:
+  - apiVersion: v1
+    fieldsType: FieldsV1
+    fieldsV1:
+      f:metadata:
+        f:annotations:
+          .: {}
+          f:checksum/config: {}
+          f:prometheus.io/port: {}
+          f:prometheus.io/scrape: {}
+        f:generateName: {}
+        f:labels:
+          .: {}
+          f:app: {}
+          f:controller-revision-hash: {}
+          f:name: {}
+          f:release: {}
+          f:statefulset.kubernetes.io/pod-name: {}
+        f:ownerReferences:
+          .: {}
+          k:{"uid":"863f31c9-c52b-4eb1-9dc4-85d965ddee48"}:
+            .: {}
+            f:apiVersion: {}
+            f:blockOwnerDeletion: {}
+            f:controller: {}
+            f:kind: {}
+            f:name: {}
+            f:uid: {}
+      f:spec:
+        f:affinity: {}
+        f:containers:
+          k:{"name":"loki"}:
+            .: {}
+            f:args: {}
+            f:image: {}
+            f:imagePullPolicy: {}
+            f:livenessProbe:
+              .: {}
+              f:failureThreshold: {}
+              f:httpGet:
+                .: {}
+                f:path: {}
+                f:port: {}
+                f:scheme: {}
+              f:initialDelaySeconds: {}
+              f:periodSeconds: {}
+              f:successThreshold: {}
+              f:timeoutSeconds: {}
+            f:name: {}
+            f:ports:
+              .: {}
+              k:{"containerPort":3100,"protocol":"TCP"}:
+                .: {}
+                f:containerPort: {}
+                f:name: {}
+                f:protocol: {}
+            f:readinessProbe:
+              .: {}
+              f:failureThreshold: {}
+              f:httpGet:
+                .: {}
+                f:path: {}
+                f:port: {}
+                f:scheme: {}
+              f:initialDelaySeconds: {}
+              f:periodSeconds: {}
+              f:successThreshold: {}
+              f:timeoutSeconds: {}
+            f:resources: {}
+            f:securityContext:
+              .: {}
+              f:readOnlyRootFilesystem: {}
+            f:terminationMessagePath: {}
+            f:terminationMessagePolicy: {}
+            f:volumeMounts:
+              .: {}
+              k:{"mountPath":"/data"}:
+                .: {}
+                f:mountPath: {}
+                f:name: {}
+              k:{"mountPath":"/etc/loki"}:
+                .: {}
+                f:mountPath: {}
+                f:name: {}
+        f:dnsPolicy: {}
+        f:enableServiceLinks: {}
+        f:hostname: {}
+        f:restartPolicy: {}
+        f:schedulerName: {}
+        f:securityContext:
+          .: {}
+          f:fsGroup: {}
+          f:runAsGroup: {}
+          f:runAsNonRoot: {}
+          f:runAsUser: {}
+        f:serviceAccount: {}
+        f:serviceAccountName: {}
+        f:subdomain: {}
+        f:terminationGracePeriodSeconds: {}
+        f:volumes:
+          .: {}
+          k:{"name":"config"}:
+            .: {}
+            f:name: {}
+            f:secret:
+              .: {}
+              f:defaultMode: {}
+              f:secretName: {}
+          k:{"name":"storage"}:
+            .: {}
+            f:emptyDir: {}
+            f:name: {}
+    manager: kube-controller-manager
+    operation: Update
+    time: "2021-08-31T02:03:32Z"
+  - apiVersion: v1
+    fieldsType: FieldsV1
+    fieldsV1:
+      f:status:
+        f:conditions:
+          k:{"type":"ContainersReady"}:
+            .: {}
+            f:lastProbeTime: {}
+            f:lastTransitionTime: {}
+            f:status: {}
+            f:type: {}
+          k:{"type":"Initialized"}:
+            .: {}
+            f:lastProbeTime: {}
+            f:lastTransitionTime: {}
+            f:status: {}
+            f:type: {}
+          k:{"type":"Ready"}:
+            .: {}
+            f:lastProbeTime: {}
+            f:lastTransitionTime: {}
+            f:status: {}
+            f:type: {}
+        f:containerStatuses: {}
+        f:hostIP: {}
+        f:phase: {}
+        f:podIP: {}
+        f:podIPs:
+          .: {}
+          k:{"ip":"172.169.115.157"}:
+            .: {}
+            f:ip: {}
+        f:startTime: {}
+    manager: kubelet
+    operation: Update
+    time: "2021-08-31T02:05:13Z"
+  name: loki-0
+  namespace: loki
+  ownerReferences:
+  - apiVersion: apps/v1
+    blockOwnerDeletion: true
+    controller: true
+    kind: StatefulSet
+    name: loki
+    uid: 863f31c9-c52b-4eb1-9dc4-85d965ddee48
+  resourceVersion: "1916211"
+  uid: 801f187c-2d47-4514-b7f5-d9100b1913d7
+spec:
+  affinity: {}
+  containers:
+  - args:
+    - -config.file=/etc/loki/loki.yaml
+    image: registry.cn-beijing.aliyuncs.com/dotbalo/loki:2.2.0
+    imagePullPolicy: IfNotPresent
+    livenessProbe:
+      failureThreshold: 3
+      httpGet:
+        path: /ready
+        port: http-metrics
+        scheme: HTTP
+      initialDelaySeconds: 45
+      periodSeconds: 10
+      successThreshold: 1
+      timeoutSeconds: 1
+    name: loki
+    ports:
+    - containerPort: 3100
+      name: http-metrics
+      protocol: TCP
+    readinessProbe:
+      failureThreshold: 3
+      httpGet:
+        path: /ready
+        port: http-metrics
+        scheme: HTTP
+      initialDelaySeconds: 45
+      periodSeconds: 10
+      successThreshold: 1
+      timeoutSeconds: 1
+    resources: {}
+    securityContext:
+      readOnlyRootFilesystem: true
+    terminationMessagePath: /dev/termination-log
+    terminationMessagePolicy: File
+    volumeMounts:
+    - mountPath: /etc/loki
+      name: config
+    - mountPath: /data
+      name: storage
+    - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+      name: loki-token-ghkkb
+      readOnly: true
+  dnsPolicy: ClusterFirst
+  enableServiceLinks: true
+  hostname: loki-0
+  nodeName: k8s-master2
+  preemptionPolicy: PreemptLowerPriority
+  priority: 0
+  restartPolicy: Always
+  schedulerName: default-scheduler
+  securityContext:
+    fsGroup: 10001
+    runAsGroup: 10001
+    runAsNonRoot: true
+    runAsUser: 10001
+  serviceAccount: loki
+  serviceAccountName: loki
+  subdomain: loki-headless
+  terminationGracePeriodSeconds: 4800
+  tolerations:
+  - effect: NoExecute
+    key: node.kubernetes.io/not-ready
+    operator: Exists
+    tolerationSeconds: 300
+  - effect: NoExecute
+    key: node.kubernetes.io/unreachable
+    operator: Exists
+    tolerationSeconds: 300
+  volumes:
+  - name: config
+    secret:
+      defaultMode: 420
+      secretName: loki
+  - emptyDir: {}
+    name: storage
+  - name: loki-token-ghkkb
+    secret:
+      defaultMode: 420
+      secretName: loki-token-ghkkb
+status:
+  conditions:
+  - lastProbeTime: null
+    lastTransitionTime: "2021-08-31T02:03:32Z"
+    status: "True"
+    type: Initialized
+  - lastProbeTime: null
+    lastTransitionTime: "2021-08-31T02:05:13Z"
+    status: "True"
+    type: Ready
+  - lastProbeTime: null
+    lastTransitionTime: "2021-08-31T02:05:13Z"
+    status: "True"
+    type: ContainersReady
+  - lastProbeTime: null
+    lastTransitionTime: "2021-08-31T02:03:32Z"
+    status: "True"
+    type: PodScheduled
+  containerStatuses:
+  - containerID: docker://5fa9d2b3957ccd6fee23524cb77886a2d0634a00fc98c90acc0ebc3d9deec4b1
+    image: registry.cn-beijing.aliyuncs.com/dotbalo/loki:2.2.0
+    imageID: docker-pullable://registry.cn-beijing.aliyuncs.com/dotbalo/loki@sha256:2bca096f7744b7776577f701fab87079dabe9889b93ad2432e82779e5af032ef
+    lastState: {}
+    name: loki
+    ready: true
+    restartCount: 0
+    started: true
+    state:
+      running:
+        startedAt: "2021-08-31T02:04:11Z"
+  hostIP: 192.168.80.7
+  phase: Running
+  podIP: 172.169.115.157
+  podIPs:
+  - ip: 172.169.115.157
+  qosClass: BestEffort
+  startTime: "2021-08-31T02:03:32Z"

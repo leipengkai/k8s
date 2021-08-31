@@ -18,7 +18,8 @@ data:
     output.kafka:
       hosts: ["kafka:9092"]
       #hosts: ["kafka-1-ip-service.logging:9092","kafka-2-ip-service.logging:9092"]
-      topic: "test-filebeat"
+      #topic: "test-filebeat"
+      topic: "filebeat-sidecar"
       codec.json:
         pretty: false
       keep_alive: 30s
