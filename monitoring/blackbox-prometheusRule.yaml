@@ -1,0 +1,27 @@
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  labels:
+    app.kubernetes.io/component: exporter
+    app.kubernetes.io/name: blackbox-exporter
+    app.kubernetes.io/version: 1.1.2
+    prometheus: k8s
+    role: alert-rules
+  name: blackbox
+  namespace: monitoring
+spec:
+  groups: # 对其进行分组
+  - name: blackbox-exporter # 组名,一般同 app.kubernetes.io/name
+    rules: # 定义一个或多个告警规则
+    - alert: DomainAccessDelayExceeds1s # 告警策略的名称
+      annotations: # 告警的注释信息
+        description: 域名是 {{ $labels.instance }} 探测延迟大于1秒, 当前延迟为 {{  $value }}
+        runbook_url: https://github.com/prometheus-operator/kube-prometheus/wiki/nodefilesystemspacefillingup
+        summary: 域名探测,访问延迟超过1秒
+      expr: | # 告警表达式 promQL |:表示多行
+        sum(probe_http_duration_seconds{job="blackbox"}) by (instance) > 1
+      for: 10m # 评估等待时间,告警持续多久才发送告警数据.防止误报
+      labels: # 告警的标签,用于告警的路由(router),也可在description中使用
+        level: low
+        severity: warning
+        type: blackbox

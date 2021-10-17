@@ -1,0 +1,64 @@
+- job_name: "blackbox"
+  metrics_path: /probe
+  params:
+    module: [http_2xx] # Look for a HTTP 200 response.
+  static_configs:
+    - targets:
+        - https://prometheus.io # Target to probe with https.
+        - https://www.bing.com # Target to probe with http on port 8080.
+        - http://www.leipengkai.com 
+  relabel_configs:
+    - source_labels: [__address__]
+      target_label: __param_target
+    - source_labels: [__param_target]
+      target_label: instance
+    - source_labels: [instance] # 加了这两行就不用 改 5345 dashboard 模板了
+      target_label: target
+    - target_label: __address__
+      replacement: blackbox-exporter:9115 # The blackbox exporter's real hostname:port.
+- job_name: "auto_discovery"
+  metrics_path: /probe
+  params:
+    module: [http_2xx]
+  kubernetes_sd_configs:
+    - role: ingress
+  relabel_configs:
+    - source_labels:
+        [__meta_kubernetes_ingress_annotation_prometheus_io_http_probe]
+      action: keep
+      regex: true
+    - source_labels:
+        [
+          __meta_kubernetes_ingress_scheme,
+          __address__,
+          __meta_kubernetes_ingress_path,
+        ]
+      regex: (.+);(.+);(.+)
+      replacement: ${1}://${2}${3}
+      target_label: __param_target
+    - source_labels:
+        [
+          __meta_kubernetes_ingress_scheme,
+          __address__,
+          __meta_kubernetes_ingress_path,
+        ]
+      regex: (.+);(.+);(.+)
+      replacement: ${1}://${2}${3}
+      target_label: target
+    - target_label: __address__
+      replacement: blackbox-exporter:9115
+    - source_labels: [__param_target]
+      target_label: instance
+    - action: labelmap
+      regex: __meta_kubernetes_ingress_label_(.+)
+    - source_labels: [__meta_kubernetes_namespace]
+      target_label: kubernetes_namespace
+    - source_labels: [__meta_kubernetes_ingress_name]
+      target_label: kubernetes_name
+- job_name: 'jvm-discovery-prometheus'
+  scheme: http
+  metrics_path: '/actuator/prometheus'
+  consul_sd_configs:
+    - server: '192.168.80.6:18761' #eureka的地址
+      scheme: http
+      services: []

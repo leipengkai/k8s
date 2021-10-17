@@ -1,0 +1,21 @@
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  labels:
+    app: kafka-exporter
+  name: kafka-exporter
+  namespace: monitoring
+spec:
+  endpoints:
+  - interval: 30s
+    port: container-1-web-1
+    #scheme: https
+    #tlsConfig:
+      #insecureSkipVerify: true
+  #jobLabel: app
+  namespaceSelector:
+    matchNames:
+    - monitoring
+  selector:
+    matchLabels:
+      app: kafka-exporter
